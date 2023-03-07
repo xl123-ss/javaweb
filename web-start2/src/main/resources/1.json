@@ -1,0 +1,33 @@
+{
+  "check_code": 0,
+  "check_msg": "",
+  "data": {
+    "_id": "639efee5cab626000a12f789",
+    "appId": "5e3b8676c3668d000638849a",
+    "entryId": "5e523eefb635060006aab416",
+    "creator": {
+      "_id": "631067117815b0000b8bb236",
+      "name": "薛龙",
+      "status": 1,
+      "username": "2205223241",
+      "type": 0
+    },
+    "updater": {
+      "_id": "631067117815b0000b8bb236",
+      "name": "薛龙",
+      "status": 1,
+      "username": "2205223241",
+      "type": 0
+    },
+    "createTime": "2022-12-18T11:52:05.728Z",
+    "updateTime": "2022-12-18T11:52:05.728Z",
+    "_widget_1582451693412": "2022-12-20T00:00:00.000Z",
+    "_widget_1582448367786": {
+      "_id": "631067117815b0000b8bb236",
+      "name": "薛龙",
+      "status": 1,
+      "username": "2205223241",
+      "type": 0
+    }
+  }
+}
