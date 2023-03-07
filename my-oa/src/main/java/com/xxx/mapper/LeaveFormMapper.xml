@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.mapper.LeaveFormMapper">
+    <insert id="insert" parameterType="LeaveForm" useGeneratedKeys="true" keyColumn="employee_id"
+            keyProperty="formId">
+        INSERT
+        INTO `oa`.`adm_leave_form` (`form_id`, `employee_id`, `form_type`, `start_time`, `end_time`, `reason`,
+                                    `create_time`, `state`)
+        VALUES (null, #{employeeId}, #{formType}, #{startTime},
+                #{startTime}, #{reason}, #{createTime}, #{state});
+
+    </insert>
+
+    <update id="update" parameterType="LeaveForm">
+        UPDATE `oa`.`adm_leave_form`
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="formType != null and formType !=''">
+                `form_type` = #{formType},
+            </if>
+            <if test="startTime != null">
+                `start_time` = #{startTime},
+            </if>
+
+            <if test="endTime != null">
+                `end_time` = #{endTime},
+            </if>
+            <if test="reason != null and reason != ''">
+                `reason` = #{reason},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="state != null and state != ''">
+                `state` = #{state}
+            </if>
+        </trim>
+        WHERE `form_id` = #{formId};
+
+    </update>
+
+    <select id="selectParams" parameterType="map" resultType="java.util.LinkedHashMap">
+        select f.*,e.name,d.*
+        from adm_leave_form f,adm_process_flow pf,adm_employee e,adm_department d
+        where f.employee_id = e.employee_id
+        and f.form_id = pf.form_id
+        and e.department_id = d.department_id
+        <if test="state != null and state !=''">
+            and pf.state = #{state}
+        </if>
+        <if test="operatorId != null and operatorId !=''">
+            and pf.operator_id = #{operatorId}
+        </if>
+
+    </select>
+</mapper>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OA办公系统</title>
+  <!-- Import style -->
+  <!--    <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css"/>-->
+  <!--    &lt;!&ndash; Import Vue 3 &ndash;&gt;-->
+  <!--    <script src="//unpkg.com/vue@3"></script>-->
+  <!--    &lt;!&ndash; Import component library &ndash;&gt;-->
+  <!--    <script src="//unpkg.com/element-plus"></script>-->
+  <!--    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+  <!--    <script src="//unpkg.com/@element-plus/icons-vue"></script>-->
+
+  <link rel="stylesheet" href="assert/index.css"/>
+  <!-- Import Vue 3 -->
+  <script src="assert/vue.global.js"></script>
+  <!-- Import component library -->
+  <script src="assert/index.full.js"></script>
+  <script src="assert/axios.min.js"></script>
+  <script src="//unpkg.com/@element-plus/icons-vue"></script>
+  <style>
+    .leftmenu {
+      height: 100vh;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .daohang {
+      margin: 0;
+      padding: 0;
+    }
+
+    .headermenu {
+      height: 60px;
+      padding: 0;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div class="common-layout">
+    <el-container>
+
+      <el-header class="daohang">
+        <el-menu
+            class="el-menu-demo headermenu"
+            mode="horizontal"
+            :ellipsis="false"
+            background-color="#545c64"
+            text-color="#fff"
+        >
+          <el-menu-item>OA 办公系统&nbsp;&nbsp;部门:{{ departmentName }}</el-menu-item>
+          <div style="margin-left: 1450px;">
+            <el-dropdown style="float: right;padding-left: 10px;">
+              <el-menu-item class="menu">{{ employee.name }}{{ employee.title }}</el-menu-item>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="logout">注销</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <el-avatar style="float: right;margin-top: 8px;"
+                       src="https://images6.alphacoders.com/130/thumbbig-1304436.webp"/>
+          </div>
+
+        </el-menu>
+      </el-header>
+      <el-container>
+
+        <el-aside width="200px" class="daohang">
+          <el-menu
+              active-text-color="#000"
+              background-color="#fff"
+              class="el-menu-vertical-demo leftmenu"
+              text-color="#000"
+          >
+
+
+            <el-sub-menu :index="index" v-for="(item,index) in nodeList">
+
+              <template #title>
+                <el-icon :size="30" :color="yellow">
+                  <Comment/>
+                </el-icon>
+
+                <span>{{ item.node.nodeName }}</span>
+              </template>
+
+              <el-menu-item-group v-for="children in item.children">
+                <el-menu-item :index="`${index}-${children.nodeId}`"
+                              @click="changeUrl(children.url)">
+                  <el-icon :size="30" :color="yellow">
+                    <Edit/>
+                  </el-icon>
+                  {{ children.nodeName }}
+                </el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
+          </el-menu>
+        </el-aside>
+        <el-main>
+          <iframe :src="mainUrl" frameborder="0" scrolling="no" width="100%" height="90%"></iframe>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</div>
+<script>
+  const Main = {
+    data() {
+      return {
+        employee: [],
+        nodeList: [],
+        mainUrl: localStorage.baseURL + '/dashboard.html',
+        departmentName: '',
+
+      }
+    },
+    created() {
+      const params = new URLSearchParams();
+      params.append("eid", localStorage.getItem("eid"));
+      params.append("uid", localStorage.getItem("uid"))
+      axios.post(localStorage.baseURL + "/nodeInfo", params).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          // console.log("aaaaaaaaa")
+          this.employee = res.data.data.employee;
+          this.nodeList = res.data.data.nodeList;
+          this.department = res.data.data.department;
+          localStorage.employee = JSON.stringify(this.employee);
+          localStorage.department = JSON.stringify(this.department);
+
+        } else {
+          this.$message.error("出错了")
+        }
+      })
+    },
+    methods: {
+      logout() {
+        localStorage.clear();
+        window.location.href = "/oa/"
+      },
+      changeUrl(url) {
+        this.mainUrl = localStorage.baseURL + url;
+      }
+    }
+  }
+  const app = Vue.createApp(Main);
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
+  app.use(ElementPlus);
+  app.mount("#app");
+</script>
+</body>
+</html>

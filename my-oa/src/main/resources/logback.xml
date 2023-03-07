@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%t] {%-5level} [%logger{36}] %n[%msg]%n%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d [%t] {%-5level} [%logger{36}] %n[%msg]%n%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <file>logback/output.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logback/output.log.%i</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>1MB</MaxFileSize>
+        </triggeringPolicy>
+        <!-- 此日志文件只记录error级别的 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <!--            其他界别的全都拒绝掉-->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--可以输出项目中的debug日志，包括mybatis的sql日志-->
+    <!--实现原理，指定这些包内只有info级别的日志才能输出，避免了很多不必要的输出
+    sql语句的输出是debug级别的，且不在些包内，所以root级别别必须设置为debug
+    -->
+    <logger name="org.mybatis" level="info"/>
+    <logger name="org.apache.ibatis" level="info"/>
+    <logger name="java.sql.Connection" level="info"/>
+    <logger name="java.sql.Statement" level="info"/>
+    <logger name="java.sql.PreparedStatement" level="info"/>
+
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

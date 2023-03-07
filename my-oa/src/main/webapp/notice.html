@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>请假申请</title>
+<!--    <link rel="stylesheet" href="/assert/index.css"/>-->
+<!--    &lt;!&ndash; Import Vue 3 &ndash;&gt;-->
+<!--    <script src="/assert/vue.global.js"></script>-->
+<!--    &lt;!&ndash; Import component library &ndash;&gt;-->
+<!--    <script src="/assert/index.full.js"></script>-->
+<!--    <script src="/assert/axios.min.js"></script>-->
+<!--    <script src="//unpkg.com/element-plus/dist/locale/zh-cn"></script>-->
+    <link rel="stylesheet" href="assert/index.css"/>
+    <!-- Import Vue 3 -->
+    <script src="assert/vue.global.js"></script>
+    <!-- Import component library -->
+    <script src="assert/index.full.js"></script>
+    <script src="assert/axios.min.js"></script>
+</head>
+
+
+<body>
+<div id="app">
+    <h2>系统通知</h2>
+    <el-table ref="singleTable" :data="tableData" style="width: 100%">
+        <el-table-column property="index" label="序号" width="100"></el-table-column>
+        <el-table-column property="ctime" label="通知时间" width="180"></el-table-column>
+        <el-table-column property="content" label="通知内容"></el-table-column>
+    </el-table>
+
+</div>
+
+<script>
+    const Main = {
+        data() {
+            return {
+                tableData: [],
+            }
+        },
+        methods:{
+            convert(time){
+                let res = time.split("T");
+                return res[0]+":"+res[1];
+            }
+        },
+        mounted() {
+            axios.get(localStorage.baseURL + "/api/notice/list?eid=" + localStorage.eid)
+                .then(res => {
+                    // console.log(res)
+                    // this.tableData.splice(0, this.tableData.length);
+                    console.log(res.data.data.list);
+                    res.data.data.list.forEach((item, index) => {
+
+                        item.ctime = this.convert(item.createTime);
+                        item.index = index+1;
+                        this.tableData.push(item);
+                        // console.log(item)
+                        // console.log(this.tableData)
+                    })
+                }).catch(err => {
+                console.log(err)
+            })
+
+        }
+
+    }
+
+
+    const app = Vue.createApp(Main);
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+</body>
+</html>

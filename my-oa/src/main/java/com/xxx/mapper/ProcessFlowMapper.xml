@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.mapper.ProcessFlowMapper">
+    <insert id="insert" parameterType="ProcessFlow">
+
+        INSERT INTO `oa`.`adm_process_flow`
+        (`process_id`, `form_id`, `operator_id`, `action`, `result`, `reason`, `create_time`,
+         `audit_time`, `order_no`, `state`, `is_last`)
+        VALUES (null, #{formId}, #{operatorId}, #{action}, #{result}, #{reason}, #{createTime},
+                #{auditTime}, #{orderNo}, #{state}, #{isLast});
+
+    </insert>
+
+    <update id="update" parameterType="ProcessFlow">
+        UPDATE `oa`.`adm_process_flow`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="operatorId != null and operatorId != ''">
+                `operator_id` = #{operatorId},
+            </if>
+            <if test="action != null and action != ''">
+                `action` = #{action},
+            </if>
+            <if test="result != null and result != ''">
+                `result` = #{result},
+            </if>
+
+            <if test="reason != null and reason != ''">
+                `reason` = #{reason},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="auditTime != null">
+                `audit_time` = #{auditTime},
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                `order_no` = #{orderNo},
+            </if>
+            <if test="state != null and state != ''">
+                `state` = #{state},
+            </if>
+            <if test="isLast != null and isLast != ''">
+                `is_last` = #{isLast}
+            </if>
+        </trim>
+        WHERE `process_id` = #{processId};
+    </update>
+</mapper>

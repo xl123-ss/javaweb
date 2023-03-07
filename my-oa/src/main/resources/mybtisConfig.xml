@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+    <properties resource="jdbc.properties"></properties>
+
+    <settings>
+        <!--其他配置-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="SLF4J"/>
+    </settings>
+    <!--定义别名-->
+    <typeAliases>
+        <package name="com.xxx.entity"/>
+    </typeAliases>
+
+    <!-- 1.数据库连接信息-->
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="jdbc"></transactionManager>
+            <dataSource type="com.xxx.datasource.DruidDataSourceFactory">
+                <property name="url" value="${jdbc.url}"/>
+                <property name="driverClassName" value="${jdbc.driver}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+                <property name="initialSize" value="${jdbc.initialSize}"/>
+                <property name="maxActive" value="${jdbc.maxActive}"/>
+
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <package name="com.xxx.mapper"/>
+
+<!--        <mapper resource="com/xxx/mapper/UserMapper.xml"></mapper>-->
+    </mappers>
+
+
+
+
+</configuration>
